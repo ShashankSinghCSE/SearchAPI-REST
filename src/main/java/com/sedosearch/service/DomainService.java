@@ -37,7 +37,8 @@ public class DomainService {
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		String url = "https://sedo.com/service/common.php?keyword=" + keyword
+		//past your rest endpoint here
+		String url = "https://domain.com/service/common.php?keyword=" + keyword
 				+ "&page=1&rel=6&orderdirection=2&domainIds=&v=0.1&o=json&m=search&f=requestSearch&pagesize=50";
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 		ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
