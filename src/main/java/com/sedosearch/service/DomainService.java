@@ -17,8 +17,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sedosearch.entity.Domain;
 import com.sedosearch.repository.DomainRepository;
+import com.sun.javafx.fxml.builder.URLBuilder;
 
 @Service
 public class DomainService {
@@ -30,7 +35,7 @@ public class DomainService {
 		this.domainRepository = domRepository;
 	}
 
-	public List<Domain> findAllByKeyword(String keyword) {
+	public List<Domain> findAllByKeyword(String keyword) throws JsonMappingException, JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		List<Domain> domainObjects = new ArrayList<>();
@@ -42,6 +47,15 @@ public class DomainService {
 				+ "&page=1&rel=6&orderdirection=2&domainIds=&v=0.1&o=json&m=search&f=requestSearch&pagesize=50";
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 		ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		
+		//
+		//create this Apache URIBuilder   :URIBuilder uri = new URIBuilder()
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = mapper.readTree(result.getBody());
+		JsonNode resultListItem = root.path("resultList");
+		
+		//
+		
 		JSONObject object = new JSONObject(result.getBody().toString());
 		JSONArray resultList = object.getJSONObject("b").getJSONObject("general").getJSONObject("searchRequest").getJSONArray("resultList");
 		
